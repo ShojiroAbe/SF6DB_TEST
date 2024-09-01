@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic
+sqlalchemy
+mysqlclient
+
+# requirements.txt は、Python の開発環境で利用されるパッケージ一覧を記述したファイルです。pip install コマンドでインストールするパッケージの名前とバージョンが記載されており、環境の要件を固定するために使用されます。
+
