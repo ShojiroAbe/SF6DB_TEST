@@ -19,3 +19,8 @@ https://qiita.com/gon0821/items/f9e3bcbb6cb01d4ef7fa
 ## 自動対話型の API ドキュメント(Swagger UI)
 
 `http://localhost:8000/docs`# SF6DB_TEST
+
+### git　追加手順
+`git add .`
+`git commit -m "コミットメッセージ"`
+`git push`

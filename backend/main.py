@@ -1,7 +1,20 @@
 from fastapi import FastAPI
+from sqlalchemy import create_engine, text
+from database import SessionLocal, engine
+import models
 
 app = FastAPI()
 
+# models.pyのテーブル定義をデータベースに反映
+models.Base.metadata.create_all(bind=engine)
+
+# セッションを作成する関数
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @app.get("/")
 def read_root():
@@ -11,3 +24,34 @@ def read_root():
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "q": q}
+
+@app.get("/getdb")
+def test_db_connection():
+    with engine.connect() as connection:
+        result = connection.execute(text("SHOW TABLES;"))
+        tables = result.fetchall()
+    return {"tables": tables}
+
+# with engine.connect() as connection:
+# 役割: SQLAlchemyの engine オブジェクトを使ってデータベース接続を開きます。
+# engine.connect(): データベースへの接続を確立します。
+# with 文: コンテキストマネージャを使って、接続が自動的にクローズされるようにしています。接続の開始から終了までの範囲をこのブロックで管理します。
+
+# result = connection.execute(text("SHOW TABLES;"))
+# 役割: データベースに対してSQLクエリを実行します。
+# connection.execute(): データベースに対してクエリを実行します。
+# text("SHOW TABLES;"): 実行するクエリをSQL文として書いています。SHOW TABLES; は、MySQLで現在のデータベースに存在する全テーブルをリストするクエリです。
+
+# tables = result.fetchall()
+# 役割: クエリの結果をすべて取得します。
+# result.fetchall(): クエリ結果からすべての行を取得し、それをリストとして返します。このリストにはテーブル名が含まれます。
+
+# return {"tables": tables}
+# 役割: 取得したテーブル名のリストを辞書形式でJSONレスポンスとして返します。
+# {"tables": tables}: tables にはクエリ結果が入っており、それを tables というキーでレスポンスに含めています。このデータは、ブラウザやAPIクライアントでJSON形式で表示されます。
+
+# metadata は、Base クラスに関連するすべてのテーブル定義（モデルクラス）を含むメタデータオブジェクトです。これにより、データベースに存在するべきテーブル構造を理解し、管理することができます。
+
+# create_all メソッドは、metadata に登録されているすべてのテーブルをデータベースに作成するメソッドです
+
+# 引数の bind=engine は、どのデータベースエンジンに対してこの操作を行うかを指定しています。engine はデータベース接続情報を持つオブジェクトで、database.py ファイル内で create_engine 関数を使って設定されています。
