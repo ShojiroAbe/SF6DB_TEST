@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, text
 from database import SessionLocal, engine
-import models
+import models, schemas, crud
 
 app = FastAPI()
 
@@ -16,19 +17,29 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/")
+# キャラクター登録
+@app.post("/regist/character")
+def regist_character(character: schemas.Character, db: Session=Depends(get_db)):
+    
+    # TODO 重複チェック的なの入れたい
+
+    return crud.create_character(db, character)
+
+# キャラクター取得（全て、個々）
+
+@app.get(path="/")
 def read_root():
     return {"Hello": "World"}
 
-
-@app.get("/items/{item_id}")
+@app.get(path="/items/{item_id}")
 def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "q": q}
 
-@app.get("/getdb")
+# テーブル取得
+@app.get(path="/getdb")
 def test_db_connection():
     with engine.connect() as connection:
-        result = connection.execute(text("SHOW TABLES;"))
+        result = connection.execute(statement=text(text="SHOW TABLES;"))
         tables = result.fetchall()
     return {"tables": tables}
 
