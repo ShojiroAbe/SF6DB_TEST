@@ -1,10 +1,24 @@
+from os import name
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, text
 from database import SessionLocal, engine
 import models, schemas, crud
 
-app = FastAPI()
+# Swaggerのメタデータ設定方法
+# https://fastapi.tiangolo.com/ja/tutorial/metadata/
+tags_metadata = [
+    {
+        "name": "Character",
+        "description": "キャラクター管理API",
+    }
+]
+
+app = FastAPI(
+    title="キャラクター管理API",
+    description="このAPIはストリートファイター6のキャラクター管理を行うためのAPIです。",
+    openapi_tags=tags_metadata
+)
 
 # models.pyのテーブル定義をデータベースに反映
 models.Base.metadata.create_all(bind=engine)
@@ -18,8 +32,13 @@ def get_db():
         db.close()
 
 # キャラクター登録
-@app.post("/regist/character")
+@app.post("/regist/character", tags=["Character"], summary="キャラクターの登録")
 def regist_character(character: schemas.Character, db: Session=Depends(get_db)):
+    """
+    キャラクター名をデータベースに登録するためのエンドポイントです。
+
+    - **name**: 登録するキャラクターの名前
+    """
     
     # TODO 重複チェック的なの入れたい
 
