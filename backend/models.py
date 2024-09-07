@@ -6,4 +6,4 @@ class Character(Base):
     __tablename__ = "characters"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(20), unique=True, index=True)
+    name = Column(String(length=20), unique=True, index=True)

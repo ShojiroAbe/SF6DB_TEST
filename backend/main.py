@@ -1,9 +1,24 @@
-from fastapi import FastAPI
+from os import name
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, text
 from database import SessionLocal, engine
-import models
+import models, schemas, crud
 
-app = FastAPI()
+# Swaggerのメタデータ設定方法
+# https://fastapi.tiangolo.com/ja/tutorial/metadata/
+tags_metadata = [
+    {
+        "name": "Character",
+        "description": "キャラクター管理API",
+    }
+]
+
+app = FastAPI(
+    title="キャラクター管理API",
+    description="このAPIはストリートファイター6のキャラクター管理を行うためのAPIです。",
+    openapi_tags=tags_metadata
+)
 
 # models.pyのテーブル定義をデータベースに反映
 models.Base.metadata.create_all(bind=engine)
@@ -16,19 +31,37 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+# キャラクター登録
+@app.post("/regist/character", tags=["Character"], summary="キャラクターの登録")
+def regist_character(character: schemas.Character, db: Session=Depends(get_db)):
+    """
+    キャラクター名をデータベースに登録するためのエンドポイントです。
+
+    - **name**: 登録するキャラクターの名前
+    """
+    
+    # TODO 重複チェック的なの入れたい
+
+    return crud.create_character(db, character)
+
+# キャラクター取得（全て、個々）
+@app.get("/get/character", response_model=list[schemas.Character], tags=["Character"], summary="キャラクターの取得")
+def get_character(db: Session=Depends(get_db)):
+    """
+    キャラクターを取得するためのエンドポイントです。
+    """
+
+    return crud.get_character(db)
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-
-@app.get("/getdb")
+# テーブル取得
+@app.get(path="/getdb", summary="テーブルの取得")
 def test_db_connection():
+    """
+    今あるテーブルの取得
+    """
     with engine.connect() as connection:
-        result = connection.execute(text("SHOW TABLES;"))
+        result = connection.execute(statement=text(text="SHOW TABLES;"))
         tables = result.fetchall()
     return {"tables": tables}
 
