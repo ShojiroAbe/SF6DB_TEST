@@ -45,18 +45,21 @@ def regist_character(character: schemas.Character, db: Session=Depends(get_db)):
     return crud.create_character(db, character)
 
 # キャラクター取得（全て、個々）
+@app.get("/get/character", response_model=list[schemas.Character], tags=["Character"], summary="キャラクターの取得")
+def get_character(db: Session=Depends(get_db)):
+    """
+    キャラクターを取得するためのエンドポイントです。
+    """
 
-@app.get(path="/")
-def read_root():
-    return {"Hello": "World"}
+    return crud.get_character(db)
 
-@app.get(path="/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
 
 # テーブル取得
-@app.get(path="/getdb")
+@app.get(path="/getdb", summary="テーブルの取得")
 def test_db_connection():
+    """
+    今あるテーブルの取得
+    """
     with engine.connect() as connection:
         result = connection.execute(statement=text(text="SHOW TABLES;"))
         tables = result.fetchall()
