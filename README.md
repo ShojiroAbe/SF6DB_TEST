@@ -16,6 +16,12 @@ https://qiita.com/gon0821/items/f9e3bcbb6cb01d4ef7fa
 
 `docker-compose up -d`
 
+## コンテナ立ち上げ及びビルド
+コンテナがビルドされていない場合に自動的にビルドを行うことができます。
+ビルドされていない場合や変更があった場合にもビルドされてコンテナが立ち上がります。
+
+`docker-compose up -d --build`
+
 ## 自動対話型の API ドキュメント(Swagger UI)
 
 `http://localhost:8000/docs`# SF6DB_TEST

@@ -2,7 +2,7 @@
 # 開発のレイヤー
 # ==================================================
 FROM node:18-alpine AS dev
-WORKDIR /app/frontend
+WORKDIR /app
 
 COPY ./frontend .
 
