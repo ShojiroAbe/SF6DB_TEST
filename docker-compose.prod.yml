@@ -1,3 +1,5 @@
+# 本番用のymlファイル、使うかどうかは不明
+
 version: '3.8'
 
 services:
@@ -17,13 +19,13 @@ services:
   
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     container_name: backend-container
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/app
     environment:
       # <データベースの種類>://<ユーザー名>:<パスワード>@<ホスト名>:<ポート番号>/<データベース名>
       DATABASE_URL: mysql://user:user-pass@mysql:3306/mydb
@@ -33,15 +35,12 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfiles/frontend/Dockerfile
-      target: dev
-    container_name: frontend-container
-    volumes:
-      - ./frontend:/app/frontend
+      target: runner  # 本番時はrunnerステージを使用
     ports:
       - "3000:3000"
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
+    command: npm start  # 本番モードで実行
 
 
 volumes:
