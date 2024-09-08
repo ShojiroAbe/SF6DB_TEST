@@ -37,7 +37,7 @@ services:
       target: dev
     container_name: frontend-container
     volumes:
-      - ./frontend:/app/frontend
+      - ./frontend:/app
     ports:
       - "3000:3000"
     environment:
