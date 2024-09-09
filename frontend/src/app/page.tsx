@@ -4,8 +4,14 @@ import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import Add from '@mui/icons-material/Add';
 import { useState } from 'react';
+// import { useAddCharacter } from './hooks/useAddCharacter';
+import { useGetCharacter } from './hooks/useGetCharacter';
 
 export default function Home() {
+
+  // const { data, error, isLoading } = useAddCharacter()
+  const { data, error, isLoading } = useGetCharacter()
+
   // 名前フォーム初期値設定
   const [name, setName] = useState('')
 
