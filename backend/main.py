@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, text
 from database import SessionLocal, engine
 import models, schemas, crud
+from fastapi.middleware.cors import CORSMiddleware
 
 # Swaggerのメタデータ設定方法
 # https://fastapi.tiangolo.com/ja/tutorial/metadata/
@@ -18,6 +19,18 @@ app = FastAPI(
     title="キャラクター管理API",
     description="このAPIはストリートファイター6のキャラクター管理を行うためのAPIです。",
     openapi_tags=tags_metadata
+)
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # models.pyのテーブル定義をデータベースに反映
