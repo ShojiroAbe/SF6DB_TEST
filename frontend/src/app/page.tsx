@@ -7,21 +7,45 @@ import { useState } from 'react';
 // import { useAddCharacter } from './hooks/useAddCharacter';
 import { useGetCharacter } from './hooks/useGetCharacter';
 
+// 環境変数行き予定
+const API_URL = 'http://localhost:8000'
+
 export default function Home() {
 
-  // const { data, error, isLoading } = useAddCharacter()
-  const { data, error, isLoading } = useGetCharacter()
+  // const { AddData, addError, addIsLoading } = useAddCharacter()
+  const { getData, getError, getIsLoading } = useGetCharacter()
 
   // 名前フォーム初期値設定
   const [name, setName] = useState('')
 
-  const setInputValue = (value: string) => {
+  const setInputValue =  (value: string) => {
     console.log('入力されました', value);
     setName(value)
   }
 
-  const addCharacter = () => {
-    console.log('キャラクターの追加');
+  const addCharacter = async () => {
+    console.log(name, 'キャラクターの追加');
+
+    if (name) {
+      const response = await fetch(`${API_URL}/regist/character`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+        }),
+      })
+
+      try {
+        if (response.ok) {
+          console.log(response);
+          setName('');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log("値を入れて");
+    }
   }
 
   return (
