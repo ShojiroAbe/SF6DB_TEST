@@ -10,11 +10,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3  # checkoutのバージョンをv3に更新
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install  # Next.jsなどの依存関係をインストール
 
       - name: Run lint
         working-directory: frontend
-        run: npm run lint
+        run: npm run lint  # Lintの実行
       
       - name: Echo
         run: echo "hello world!!"
