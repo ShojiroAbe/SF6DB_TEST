@@ -15,3 +15,6 @@ jobs:
       - name: Run lint
         working-directory: frontend
         run: npm run lint
+      
+      - name: Echo
+        run: echo "hello world!!"
