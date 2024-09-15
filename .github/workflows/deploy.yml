@@ -11,4 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm run lint
+
+      - name: Run lint
+        working-directory: frontend
+        run: npm run lint
+      
+      - name: Echo
+        run: echo "hello world!!"
