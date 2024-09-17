@@ -7,9 +7,6 @@ import { useState } from 'react';
 // import { useAddCharacter } from './hooks/useAddCharacter';
 import { useGetCharacter } from './hooks/useGetCharacter';
 
-// 環境変数行き予定
-const API_URL = 'http://localhost:8000'
-
 export default function Home() {
 
   // const { AddData, addError, addIsLoading } = useAddCharacter()
@@ -27,7 +24,7 @@ export default function Home() {
     console.log(name, 'キャラクターの追加');
 
     if (name) {
-      const response = await fetch(`${API_URL}/regist/character`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_API_URL}/regist/character`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
